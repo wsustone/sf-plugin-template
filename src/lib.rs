@@ -1,49 +1,59 @@
 //! # StrategyForge Plugin Template
 //! 
 //! This is a template for creating StrategyForge plugins.
-//! Replace the content with your plugin's functionality.
 
 use bevy::prelude::*;
+use dyn_clone::DynClone;
 
-/// The main plugin struct that will be loaded by the game
+/// Trait that plugins must implement
+pub trait GamePlugin: Plugin + DynClone + Send + Sync + 'static {
+    fn name(&self) -> &'static str;
+    fn version(&self) -> &'static str;
+}
+
+dyn_clone::clone_trait_object!(GamePlugin);
+
+/// Example plugin implementation
+#[derive(Default, Clone)]
 pub struct TemplatePlugin;
 
 impl Plugin for TemplatePlugin {
     fn build(&self, app: &mut App) {
-        #[cfg(feature = "dev")]
-        app.add_systems(Startup, setup_developer_tools);
-        
         app.add_systems(Startup, setup_plugin)
            .add_systems(Update, update_system);
-           
-        #[cfg(feature = "dev")]
-        app.register_type::<TemplateComponent>();
     }
 }
 
-// Example component
-#[derive(Component, Reflect)]
-#[reflect(Component)]
+impl GamePlugin for TemplatePlugin {
+    fn name(&self) -> &'static str {
+        "TemplatePlugin"
+    }
+
+    fn version(&self) -> &'static str {
+        "0.1.0"
+    }
+}
+
+#[derive(Component)]
 pub struct TemplateComponent {
     pub value: f32,
 }
 
 fn setup_plugin(mut commands: Commands) {
-    // Initialize plugin resources and entities here
     info!("TemplatePlugin initialized!");
+    commands.spawn(TemplateComponent { value: 1.0 });
 }
 
-fn update_system(time: Res<Time>, mut query: Query<&mut Transform, With<TemplateComponent>>) {
-    // Example update system
-    for mut transform in &mut query {
-        transform.rotate_z(time.delta_seconds());
+fn update_system(query: Query<&TemplateComponent>) {
+    for component in &query {
+        trace!("Template component value: {}", component.value);
     }
 }
 
-#[cfg(feature = "dev")]
-fn setup_developer_tools(mut commands: Commands) {
-    // Add development-only systems and resources here
-    info!("Developer tools enabled for TemplatePlugin");
+// Required for dynamic loading
+#[no_mangle]
+pub extern "C" fn _create_plugin() -> *mut dyn GamePlugin {
+    Box::into_raw(Box::new(TemplatePlugin::default()))
 }
 
 #[cfg(test)]

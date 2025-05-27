@@ -2,23 +2,23 @@
 name = "sf-plugin-template"
 version = "0.1.0"
 edition = "2021"
-description = "A template for StrategyForge plugins"
-license = "MIT"
 
 [dependencies]
-bevy = { version = "0.12", default-features = false }
+bevy = { version = "0.14.2", default-features = false, features = ["dynamic_linking"] }
+bevy_reflect = { version = "0.14.2", features = ["bevy"] }
+dyn-clone = "1.0"
 strategyforge-core = { path = "../StrategyForge-Core" }
 
 [lib]
-name = "strategyforge_plugin_template"
-crate-type = ["cdylib", "rlib"]  # rlib for tests, cdylib for loading
+crate-type = ["cdylib", "rlib"]
+path = "src/lib.rs"
 
 [features]
-dev = []  # Development-only features
+default = []
 
 [profile.dev]
-opt-level = 1  # Faster debug builds with some optimizations
+opt-level = 1
 
 [profile.release]
-lto = true      # Link-time optimization
-codegen-units = 1  # Better optimization, slower build
+lto = true
+codegen-units = 1
