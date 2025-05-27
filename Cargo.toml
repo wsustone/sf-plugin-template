@@ -1,0 +1,24 @@
+[package]
+name = "sf-plugin-template"
+version = "0.1.0"
+edition = "2021"
+description = "A template for StrategyForge plugins"
+license = "MIT"
+
+[dependencies]
+bevy = { version = "0.12", default-features = false }
+strategyforge-core = { path = "../StrategyForge-Core" }
+
+[lib]
+name = "strategyforge_plugin_template"
+crate-type = ["cdylib", "rlib"]  # rlib for tests, cdylib for loading
+
+[features]
+dev = []  # Development-only features
+
+[profile.dev]
+opt-level = 1  # Faster debug builds with some optimizations
+
+[profile.release]
+lto = true      # Link-time optimization
+codegen-units = 1  # Better optimization, slower build
