@@ -7,18 +7,18 @@ edition = "2021"
 bevy = { workspace = true, features = ["bevy_ui"] }
 dyn-clone = { workspace = true }
 thiserror = { workspace = true }
-bevy_reflect = { version = "0.14.2", features = ["bevy"] }
+bevy_reflect = { workspace = true, features = ["bevy"] }
+
+# These are only needed for UI/plugin dev, not for the cdylib
+[dev-dependencies]
+bevy = { workspace = true }
+dyn-clone = { workspace = true }
+thiserror = { workspace = true }
+bevy_reflect = { workspace = true, features = ["bevy"] }
 
 [lib]
-crate-type = ["cdylib", "rlib"]
 path = "src/lib.rs"
+crate-type = ["rlib"]
 
 [features]
 default = []
-
-[profile.dev]
-opt-level = 1
-
-[profile.release]
-lto = true
-codegen-units = 1
