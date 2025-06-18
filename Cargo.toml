@@ -2,23 +2,24 @@
 name = "sf-plugin-template"
 version = "0.1.0"
 edition = "2021"
-
-[dependencies]
-bevy = { workspace = true, features = ["bevy_ui"] }
-dyn-clone = { workspace = true }
-thiserror = { workspace = true }
-bevy_reflect = { workspace = true, features = ["bevy"] }
-
-# These are only needed for UI/plugin dev, not for the cdylib
-[dev-dependencies]
-bevy = { workspace = true }
-dyn-clone = { workspace = true }
-thiserror = { workspace = true }
-bevy_reflect = { workspace = true, features = ["bevy"] }
+description = "Template for StrategyForge plugins"
+license = "MIT"
 
 [lib]
 path = "src/lib.rs"
 crate-type = ["rlib"]
 
-[features]
-default = []
+[dependencies]
+# Bevy - Using features from workspace
+bevy = { workspace = true }
+
+# Core Dependencies
+thiserror = { workspace = true }
+dyn-clone = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+log = { workspace = true }
+
+[dev-dependencies]
+# Testing dependencies - using workspace Bevy with default features
+bevy = { workspace = true }
+
